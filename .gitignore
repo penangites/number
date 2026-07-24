@@ -1,0 +1,6 @@
+.DS_Store
+.idea
+.junie
+.vscode
+/.claude/settings.local.json
+/.codex/config.toml
