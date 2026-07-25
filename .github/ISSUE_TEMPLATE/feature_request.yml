@@ -1,6 +1,7 @@
 name: Feature request
 description: Propose an addition or change to the API.
 labels: [enhancement]
+type: Feature
 body:
   - type: markdown
     attributes:

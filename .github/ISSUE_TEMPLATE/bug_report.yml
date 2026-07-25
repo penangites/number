@@ -1,6 +1,7 @@
 name: Bug report
 description: Something produced a wrong value, threw unexpectedly, or failed to throw.
 labels: [bug]
+type: Bug
 body:
   - type: input
     id: package-version
