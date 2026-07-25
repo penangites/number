@@ -4,6 +4,7 @@
     "description": "Immutable, chainable Number and Percentage value objects with exact bcmath arithmetic.",
     "type": "library",
     "keywords": [
+        "immutable",
         "number",
         "percentage",
         "decimal",
