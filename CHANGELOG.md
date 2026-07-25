@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-07-26
+
 ### Added
 
 - `Number` — an immutable, chainable decimal value object with exact bcmath
@@ -16,3 +18,6 @@ and this project adheres to
 - `Percentage` — an immutable percentage stored as an exact decimal ratio.
 - `RoundingMode` — `HalfAwayFromZero` (default), `Up`, `Down`, `Ceiling`,
   `Floor`.
+
+[Unreleased]: https://github.com/penangites/number/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/penangites/number/releases/tag/v1.0.0
