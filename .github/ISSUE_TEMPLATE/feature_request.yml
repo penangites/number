@@ -1,0 +1,42 @@
+name: Feature request
+description: Propose an addition or change to the API.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        This package deliberately does less than it could. Before proposing an
+        addition, please read
+        [Keep the API small](https://github.com/penangites/number/blob/main/CONTRIBUTING.md#pull-requests)
+        in the contributing guide.
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do that the current API makes hard or impossible?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API
+      description: What would the call site look like?
+      render: php
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: >
+        Can this already be done by combining existing methods, or in your own
+        code? If so, why does it belong in the package?
+    validations:
+      required: false
+  - type: checkboxes
+    id: fit
+    attributes:
+      label: Fit
+      options:
+        - label: I have read the "Keep the API small" section of CONTRIBUTING.md and believe this feature carries its weight.
+          required: true
