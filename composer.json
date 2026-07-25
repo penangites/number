@@ -1,0 +1,74 @@
+{
+    "$schema": "https://getcomposer.org/schema.json",
+    "name": "penangites/number",
+    "description": "Immutable, chainable Number and Percentage value objects with exact bcmath arithmetic.",
+    "type": "library",
+    "keywords": [
+        "number",
+        "percentage",
+        "decimal",
+        "bcmath",
+        "value-object",
+        "arbitrary-precision"
+    ],
+    "homepage": "https://github.com/penangites/number",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Wong Ban Korh",
+            "email": "me@bankorh.com",
+            "homepage": "https://bankorh.com",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/penangites/number/issues",
+        "security": "https://github.com/penangites/number/security/policy",
+        "source": "https://github.com/penangites/number"
+    },
+    "require": {
+        "php": "^8.3",
+        "ext-bcmath": "*"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.27",
+        "pestphp/pest": "^4.7",
+        "phpstan/phpstan": "^2.1",
+        "spaze/phpstan-disallowed-calls": "^4.13"
+    },
+    "autoload": {
+        "psr-4": {
+            "Penangites\\Number\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Penangites\\Number\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "lint": [
+            "pint --parallel"
+        ],
+        "lint:check": [
+            "pint --parallel --test"
+        ],
+        "types:check": [
+            "phpstan analyse"
+        ],
+        "test": [
+            "@lint:check",
+            "@types:check",
+            "pest"
+        ]
+    }
+}

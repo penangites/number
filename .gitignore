@@ -1,6 +1,9 @@
 .DS_Store
 .idea
 .junie
+.phpunit.cache/
 .vscode
 /.claude/settings.local.json
 /.codex/config.toml
+composer.lock
+vendor/
