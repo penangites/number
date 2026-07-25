@@ -1,0 +1,28 @@
+includes:
+    - vendor/spaze/phpstan-disallowed-calls/extension.neon
+
+parameters:
+    paths:
+        - src/
+        - tests/
+
+    level: 10
+
+    # None of these functions are dependencies of this package — this is a
+    # tripwire, not a requirement. dump()/dd() arrive transitively via dev
+    # tooling (symfony/var-dumper) and ray() via a globally installed Ray, so
+    # leftover debugging calls can work on a contributor's machine and still
+    # slip into a PR. Keeping the denylist makes CI fail on them instead.
+    #
+    disallowedFunctionCalls:
+        -
+            function:
+                - 'dd()'
+                - 'dump()'
+                - 'phpinfo()'
+                - 'print_r()'
+                - 'ray()'
+                - 'var_dump()'
+                - 'var_export()'
+            message: 'remove the debugging call before committing.'
+            errorIdentifier: 'debugCall'
