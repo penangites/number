@@ -55,10 +55,10 @@ Use strings for decimal values when every supplied digit must be preserved.
 ```php
 $n = Number::of('19.90');
 
-$n->toString(); // "19.9" — canonical decimal string
-(string) $n;    // same
-$n->toFloat();  // 19.9
-$n->toInt();    // throws — has a fractional part; round() first
+$n->toString();  // "19.9" — canonical decimal string
+(string) $n;     // same
+$n->toFloat();   // 19.9
+$n->toInt();     // throws — has a fractional part; round() first
 json_encode($n); // '"19.9"' — serialises as the exact string
 ```
 
