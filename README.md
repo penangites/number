@@ -113,10 +113,22 @@ $rate = Percentage::fromRatio('0.06');  // same thing (1 = 100%)
 
 $rate->toPercent(); // "6"
 $rate->toRatio();   // "0.06"
+$rate->toFloat();   // 0.06 — approximate; use toRatio() when exact
+$rate->toArray();   // ['ratio' => '0.06', 'percent' => '6']
 ```
 
 `Percentage` supports exact `add`, `subtract`, `negate`, comparisons and sign
-checks of its own. Apply one to a `Number`:
+checks of its own:
+
+```php
+$rate = Percentage::fromRatio('0.06'); // 6%
+
+$rate->add(Percentage::fromPercent('2'))->toPercent(); // "8"
+$rate->greaterThan(Percentage::fromRatio('0.05'));     // true
+$rate->isPositive();                                   // true
+```
+
+Apply one to a `Number`:
 
 ```php
 $price = Number::of('19.90');
