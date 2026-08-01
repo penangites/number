@@ -55,7 +55,10 @@ it('refuses an exponent that would expand beyond memory', function (string $valu
 })->with(['1e1000000000', '1e-1000000000', '1e99999999999999999999', '1e100001']);
 
 it('expands right up to the exponent ceiling', function (): void {
-    expect(strlen(Number::of('1e100000')->toString()))->toBe(100001);
+    // The exponent counts trailing zeros, so the ceiling expands to a leading
+    // digit plus 100000 of them.
+    //
+    expect(Number::of('1e100000')->toString())->toBe('1'.str_repeat('0', 100000));
 });
 
 it('renders floats at fourteen significant digits regardless of magnitude', function (): void {
