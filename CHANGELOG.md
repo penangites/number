@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-08-01
+
 ### Added
 
 - Decimal strings may use scientific notation — `Number::of('1.0E-5')` and
@@ -18,10 +20,10 @@ and this project adheres to
 
 ### Changed
 
-- **Breaking.** A float is now stored as the shortest decimal that reads back
-  as the same double, instead of being rounded to 14 significant digits. The
-  old rule could not tell arithmetic noise from the value itself, so above
-  roughly 1e13 it silently returned a *different* number:
+- **Behaviour change.** A float is now stored as the shortest decimal that
+  reads back as the same double, instead of being rounded to 14 significant
+  digits. The old rule could not tell arithmetic noise from the value itself,
+  so above roughly 1e13 it silently returned a *different* number:
   `Number::of(123456789012345.0)` gave `123456789012340`, five short, even
   though the double held the value exactly. Such values are now kept.
 - The visible cost is that drift which happened before the call is no longer
@@ -48,5 +50,6 @@ and this project adheres to
 - `RoundingMode` — `HalfAwayFromZero` (default), `Up`, `Down`, `Ceiling`,
   `Floor`.
 
-[Unreleased]: https://github.com/penangites/number/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/penangites/number/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/penangites/number/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/penangites/number/releases/tag/v1.0.0
