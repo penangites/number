@@ -8,6 +8,14 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- Decimal strings may use scientific notation — `Number::of('1.0E-5')` and
+  both `Percentage` constructors now read the form a float cast, a JSON decode
+  or a database driver hands back, expanding it positionally with no loss.
+  Exponents beyond ±100000 are rejected, since a short string would otherwise
+  expand to gigabytes.
+
 ### Fixed
 
 - `Percentage` now implements `JsonSerializable`, serialising to its exact

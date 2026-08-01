@@ -43,12 +43,20 @@ composer require penangites/number
 ### Creating numbers
 
 ```php
-Number::of('19.90'); // strings are exact — prefer them
-Number::of(100);     // integers are exact
-Number::of(1.5);     // floats accepted, rounded to 14 significant digits
+Number::of('19.90');  // strings are exact — prefer them
+Number::of(100);      // integers are exact
+Number::of(1.5);      // floats accepted, rounded to 14 significant digits
+Number::of('1.0E-5'); // scientific notation is expanded exactly
 ```
 
 Use strings for decimal values when every supplied digit must be preserved.
+
+Scientific notation is accepted wherever a decimal string is — `Percentage`
+included — because it is what a float cast, a JSON decode or a database driver
+hands back. It is expanded positionally, so `'1.0E-5'` and `'0.00001'` are the
+same value. Exponents beyond ±100000 are refused: a value needing more digits
+than that should be written out in full, where the input is as large as the
+result.
 
 ### Reading values
 

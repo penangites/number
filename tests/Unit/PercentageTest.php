@@ -16,6 +16,12 @@ it('constructs from percent by dividing by 100 exactly', function (): void {
     expect(Percentage::fromPercent('100')->toRatio())->toBe('1');
 });
 
+it('accepts scientific notation on both constructors', function (): void {
+    expect(Percentage::fromRatio('6e-2')->toRatio())->toBe('0.06');
+    expect(Percentage::fromPercent('1e2')->toRatio())->toBe('1');
+    expect(Percentage::fromPercent('2.5E-1')->toPercent())->toBe('0.25');
+});
+
 it('keeps precision far beyond a float (exact string)', function (): void {
     $ratio = '0.123456789012345678'; // 18 decimals — past double precision
 
