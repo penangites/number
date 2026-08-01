@@ -8,6 +8,14 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- `Percentage` now implements `JsonSerializable`, serialising to its exact
+  ratio string. It previously encoded to `{}` — every property is private —
+  which dropped the rate from a JSON payload with no error. It remains
+  deliberately non-`Stringable`: `toPercent()` and `toRatio()` are both
+  plausible casts, so neither is implicit.
+
 ## [1.0.0] - 2026-07-26
 
 ### Added

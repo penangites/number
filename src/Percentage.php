@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Penangites\Number;
 
 use InvalidArgumentException;
+use JsonSerializable;
 use Penangites\Number\Support\Decimal;
 
 /**
@@ -15,7 +16,7 @@ use Penangites\Number\Support\Decimal;
  * inputs are preserved exactly; float inputs are rounded to 14 significant
  * digits before being stored.
  */
-readonly class Percentage
+readonly class Percentage implements JsonSerializable
 {
     /**
      * @param  numeric-string  $ratio
@@ -89,6 +90,20 @@ readonly class Percentage
             'ratio' => $this->ratio,
             'percent' => $this->toPercent(),
         ];
+    }
+
+    /**
+     * Serialise as the ratio: it is the one view a single constructor reads
+     * back, so decoded JSON feeds straight into fromRatio().
+     *
+     * There is deliberately no __toString(): a percentage has two equally
+     * plausible string forms, and "0.06" silently rendering where "6" was
+     * meant is worse than a cast that fails. Ask for toPercent(), toRatio()
+     * or toArray() by name.
+     */
+    public function jsonSerialize(): string
+    {
+        return $this->ratio;
     }
 
     // -------------------------------------------------------------------------

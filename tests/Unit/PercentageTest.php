@@ -29,6 +29,29 @@ it('exposes percent and float views', function (): void {
     expect($percentage->toFloat())->toBe(0.1234);
 });
 
+it('serialises to array', function (): void {
+    expect(Percentage::fromRatio('0.1234')->toArray())->toBe([
+        'ratio' => '0.1234',
+        'percent' => '12.34',
+    ]);
+});
+
+it('serialises to JSON as the exact ratio', function (): void {
+    $rate = Percentage::fromPercent('6');
+
+    expect(json_encode($rate))->toBe('"0.06"');
+
+    // Every property is private, so without JsonSerializable a nested rate
+    // encoded to {} and vanished from the payload with no error.
+    //
+    expect(json_encode(['rate' => $rate]))->toBe('{"rate":"0.06"}');
+
+    // The ratio is serialised, not the percent, because it is the one view a
+    // single constructor reads back.
+    //
+    expect(Percentage::fromRatio($rate->toRatio())->equals($rate))->toBeTrue();
+});
+
 it('adds and subtracts exactly with no float drift', function (): void {
     expect(Percentage::fromRatio('0.1')->add(Percentage::fromRatio('0.2'))->toRatio())->toBe('0.3');
     expect(Percentage::fromRatio('0.3')->subtract(Percentage::fromRatio('0.1'))->toRatio())->toBe('0.2');
@@ -74,10 +97,3 @@ it('normalizes on construction', function (): void {
 it('rejects non-numeric input', function (): void {
     Percentage::fromRatio('abc');
 })->throws(InvalidArgumentException::class);
-
-it('serialises to array', function (): void {
-    expect(Percentage::fromRatio('0.1234')->toArray())->toBe([
-        'ratio' => '0.1234',
-        'percent' => '12.34',
-    ]);
-});
