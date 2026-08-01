@@ -8,7 +8,7 @@ and this project adheres to
 
 ## [Unreleased]
 
-## [1.1.0] - 2026-08-01
+## [1.1.0] - 2026-08-02
 
 ### Added
 
