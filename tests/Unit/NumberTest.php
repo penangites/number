@@ -61,8 +61,7 @@ it('expands right up to the exponent ceiling', function (): void {
     expect(Number::of('1e100000')->toString())->toBe('1'.str_repeat('0', 100000));
 });
 
-it('renders floats at fourteen significant digits regardless of magnitude', function (): void {
-    expect(Number::of(0.1 + 0.2)->toString())->toBe('0.3'); // one-ulp noise hidden
+it('renders a float as the shortest decimal that reads back the same', function (): void {
     expect(Number::of(123456.789)->toString())->toBe('123456.789');
     expect(Number::of(9876543.21)->toString())->toBe('9876543.21');
     expect(Number::of(-123456.789)->toString())->toBe('-123456.789');
@@ -70,12 +69,37 @@ it('renders floats at fourteen significant digits regardless of magnitude', func
     expect(Number::of(1E+20)->toString())->toBe('100000000000000000000');
 });
 
-it('rounds large floats at fourteen significant digits instead of exposing binary noise', function (): void {
-    expect(Number::of(1.234567890123456e20)->toString())->toBe('123456789012350000000');
+it('keeps a float that arrived intact, however many digits it carries', function (): void {
+    // Under 2^53 these doubles hold their value exactly, so rounding them to a
+    // fixed width would not truncate the number, it would change it.
+    //
+    expect(Number::of(123456789012345.0)->toString())->toBe('123456789012345');
+    expect(Number::of(12345678901234.5)->toString())->toBe('12345678901234.5');
+});
+
+it('shows drift that happened before the call rather than hiding it', function (): void {
+    // 0.3 never existed: binary64 cannot represent 0.1 or 0.2, so the sum had
+    // already landed elsewhere before Number saw it. Reporting "0.3" here
+    // would be inventing precision that was lost upstream.
+    //
+    expect(Number::of(0.1 + 0.2)->toString())->toBe('0.30000000000000004');
+    expect(Number::of(0.1 + 0.2)->toFloat())->toBe(0.1 + 0.2);
+});
+
+it('round-trips every float back to the double it came from', function (float $value): void {
+    expect(Number::of($value)->toFloat())->toBe($value);
+})->with([0.1 + 0.2, 1 / 3, 19.90 * 3, 1.15, 123456789012345.0, 1.234567890123456e20, 5.0e-324, 1.7976931348623157e308]);
+
+it('renders a large float without the binary tail it never held', function (): void {
+    // The exact double is 123456789012345602048, but 123456789012345600000
+    // reads back to the identical double and stops short of digits the value
+    // does not meaningfully carry.
+    //
+    expect(Number::of(1.234567890123456e20)->toString())->toBe('123456789012345600000');
 });
 
 it('keeps the smallest subnormal float non-zero', function (): void {
-    expect(Number::of(5.0e-324)->toString())->toBe('0.'.str_repeat('0', 323).'49406564584125');
+    expect(Number::of(5.0e-324)->toString())->toBe('0.'.str_repeat('0', 323).'494065645841247');
 });
 
 it('keeps precision far beyond a float', function (): void {

@@ -16,6 +16,19 @@ and this project adheres to
   Exponents beyond ±100000 are rejected, since a short string would otherwise
   expand to gigabytes.
 
+### Changed
+
+- **Breaking.** A float is now stored as the shortest decimal that reads back
+  as the same double, instead of being rounded to 14 significant digits. The
+  old rule could not tell arithmetic noise from the value itself, so above
+  roughly 1e13 it silently returned a *different* number:
+  `Number::of(123456789012345.0)` gave `123456789012340`, five short, even
+  though the double held the value exactly. Such values are now kept.
+- The visible cost is that drift which happened before the call is no longer
+  concealed: `Number::of(0.1 + 0.2)` is `"0.30000000000000004"`, not `"0.3"`.
+  Binary64 cannot represent `0.1` or `0.2`, so that sum never was `0.3` — pass
+  a string when a decimal must stay exact.
+
 ### Fixed
 
 - `Percentage` now implements `JsonSerializable`, serialising to its exact

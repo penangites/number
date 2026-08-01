@@ -13,8 +13,8 @@ use Penangites\Number\Support\Decimal;
  * "0.1234" = 12.34%). All arithmetic uses bcmath, so the value never drifts the
  * way a float would, and precision is unbounded — the only limit on a persisted
  * value is the database column the consuming app chooses. String and integer
- * inputs are preserved exactly; float inputs are rounded to 14 significant
- * digits before being stored.
+ * inputs are preserved exactly; a float is stored as the shortest decimal that
+ * reads back as that same double.
  */
 readonly class Percentage implements JsonSerializable
 {
@@ -26,8 +26,9 @@ readonly class Percentage implements JsonSerializable
     /**
      * Create a percentage from a ratio, where 1 represents 100%.
      *
-     * Strings and integers are preserved exactly. Floats are rounded to 14
-     * significant digits; use a string when every supplied digit must be kept.
+     * Strings and integers are preserved exactly. A float is stored as the
+     * shortest decimal that reads back as the same double; use a string to
+     * keep a decimal exact end to end.
      *
      * @throws InvalidArgumentException When $ratio is not a valid finite decimal.
      */
@@ -40,8 +41,9 @@ readonly class Percentage implements JsonSerializable
      * Create a percentage from its human-readable percent value.
      *
      * For example, "12.34" represents 12.34% and is stored as the ratio
-     * "0.1234". Strings and integers are preserved exactly. Floats are rounded
-     * to 14 significant digits; use a string when every digit must be kept.
+     * "0.1234". Strings and integers are preserved exactly. A float is stored
+     * as the shortest decimal that reads back as the same double; use a string
+     * to keep a decimal exact end to end.
      *
      * @throws InvalidArgumentException When $percent is not a valid finite decimal.
      */
