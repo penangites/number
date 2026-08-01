@@ -45,11 +45,20 @@ composer require penangites/number
 ```php
 Number::of('19.90');  // strings are exact — prefer them
 Number::of(100);      // integers are exact
-Number::of(1.5);      // floats accepted, rounded to 14 significant digits
+Number::of(1.5);      // floats accepted, stored as the double really holds them
 Number::of('1.0E-5'); // scientific notation is expanded exactly
 ```
 
 Use strings for decimal values when every supplied digit must be preserved.
+
+A float is stored as the shortest decimal that reads back as the same double,
+so nothing is invented and nothing is dropped — but a float has already lost
+whatever it lost before the call, and that shows:
+
+```php
+Number::of(0.1 + 0.2)->toString();  // "0.30000000000000004" — never was 0.3
+Number::of('0.1')->add('0.2');      // "0.3" — strings stay exact
+```
 
 Scientific notation is accepted wherever a decimal string is — `Percentage`
 included — because it is what a float cast, a JSON decode or a database driver

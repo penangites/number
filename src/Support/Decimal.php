@@ -48,17 +48,24 @@ final class Decimal
                 return '0';
             }
 
-            // Render floats at 14 significant digits — PHP's own default
-            // precision, one digit under the double's 15-digit round-trip
-            // guarantee, so one-ulp arithmetic noise stays hidden
-            // (0.1 + 0.2 -> "0.3"). Scientific notation is the only sprintf
-            // form that rounds significant digits at any magnitude (%F cannot
-            // round left of the decimal point, and its precision is capped at
-            // 53 digits, which turns subnormals into zero), so render
-            // scientific and leave normalize() to expand it positionally —
-            // the same path a caller's own "1.0E-5" string takes.
+            // Render the fewest significant digits that read back as this same
+            // double, so nothing is invented and nothing is dropped. json_encode()
+            // would do this too, but only while serialize_precision is -1, and a
+            // library cannot rely on a consuming app's php.ini.
             //
-            return sprintf('%.13e', $value);
+            // %e precision counts digits after the point, one fewer than the
+            // significant digits rendered, and 17 needs no test: IEEE 754
+            // guarantees every double survives a round trip there.
+            //
+            foreach ([15, 16] as $digits) {
+                $rendered = sprintf('%.'.($digits - 1).'e', $value);
+
+                if ((float) $rendered === $value) {
+                    return $rendered;
+                }
+            }
+
+            return sprintf('%.16e', $value);
         }
 
         return trim($value);

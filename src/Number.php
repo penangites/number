@@ -15,8 +15,9 @@ use Stringable;
  * percentage operations are exact at any precision; only divide() and round()
  * discard digits, and they do so at an explicit scale with an explicit
  * {@see RoundingMode}. Operations return new instances; the original is never
- * mutated. String and integer inputs are preserved exactly; float inputs are
- * rounded to 14 significant digits before being stored.
+ * mutated. String and integer inputs are preserved exactly; a float is stored
+ * as the shortest decimal that reads back as that same double, so whatever
+ * precision it had on arrival is kept — including any it had already lost.
  *
  *     Number::of('19.90')->tax(Percentage::fromPercent('6'))->toString(); // "21.094"
  */
@@ -30,8 +31,11 @@ readonly class Number implements JsonSerializable, Stringable
     /**
      * Create a number from a decimal value.
      *
-     * Strings and integers are preserved exactly. Floats are rounded to 14
-     * significant digits; use a string when every supplied digit must be kept.
+     * Strings and integers are preserved exactly. A float is stored as the
+     * shortest decimal that reads back as the same double — nothing is added
+     * and nothing is discarded, so a value that reached this call intact stays
+     * intact, and one that had already drifted shows that drift rather than
+     * hiding it. Use a string to keep a decimal exact end to end.
      *
      * @throws InvalidArgumentException When $value is not a valid finite decimal.
      */
