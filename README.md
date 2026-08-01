@@ -113,8 +113,10 @@ $rate = Percentage::fromRatio('0.06');  // same thing (1 = 100%)
 
 $rate->toPercent(); // "6"
 $rate->toRatio();   // "0.06"
+(string) $rate;     // same
 $rate->toFloat();   // 0.06 — approximate; use toRatio() when exact
 $rate->toArray();   // ['ratio' => '0.06', 'percent' => '6']
+json_encode($rate); // '"0.06"' — reads back with fromRatio()
 ```
 
 `Percentage` supports exact `add`, `subtract`, `negate`, comparisons and sign
