@@ -20,6 +20,44 @@ it('normalizes on construction', function (): void {
     expect(Number::of(' 1.5 ')->toString())->toBe('1.5');
 });
 
+it('accepts scientific notation, the form a float cast hands back', function (): void {
+    expect(Number::of('1e5')->toString())->toBe('100000');
+    expect(Number::of('1.0E-5')->toString())->toBe('0.00001');
+    expect(Number::of((string) 1.0E-5)->toString())->toBe('0.00001');
+    expect(Number::of('-2.5e-3')->toString())->toBe('-0.0025');
+    expect(Number::of('+1.5E+2')->toString())->toBe('150');
+    expect(Number::of('1e0')->toString())->toBe('1');
+});
+
+it('expands a mantissa carrying more than one integer digit', function (): void {
+    // %e renders exactly one, but a hand-written string need not — reading the
+    // point position as a fixed 1 would silently make these 1250 and 12.5.
+    //
+    expect(Number::of('12.5e3')->toString())->toBe('12500');
+    expect(Number::of('125e1')->toString())->toBe('1250');
+    expect(Number::of('.5e1')->toString())->toBe('5');
+    expect(Number::of('0.5e1')->toString())->toBe('5');
+});
+
+it('keeps every digit of an exponent string, past what a float could hold', function (): void {
+    expect(Number::of('1.234567890123456789e5')->toString())->toBe('123456.7890123456789');
+});
+
+it('rejects a malformed exponent', function (string $value): void {
+    expect(fn () => Number::of($value))->toThrow(InvalidArgumentException::class);
+})->with(['1e', '1e+', 'e5', '1e5.5', '1ee5', '1e 5']);
+
+it('refuses an exponent that would expand beyond memory', function (string $value): void {
+    // Without a ceiling these allocate gigabytes inside str_repeat() and die
+    // with a fatal error no caller can catch — from twelve bytes of input.
+    //
+    expect(fn () => Number::of($value))->toThrow(InvalidArgumentException::class);
+})->with(['1e1000000000', '1e-1000000000', '1e99999999999999999999', '1e100001']);
+
+it('expands right up to the exponent ceiling', function (): void {
+    expect(strlen(Number::of('1e100000')->toString()))->toBe(100001);
+});
+
 it('renders floats at fourteen significant digits regardless of magnitude', function (): void {
     expect(Number::of(0.1 + 0.2)->toString())->toBe('0.3'); // one-ulp noise hidden
     expect(Number::of(123456.789)->toString())->toBe('123456.789');
