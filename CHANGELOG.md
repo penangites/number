@@ -18,10 +18,10 @@ and this project adheres to
 
 ### Changed
 
-- **Breaking.** A float is now stored as the shortest decimal that reads back
-  as the same double, instead of being rounded to 14 significant digits. The
-  old rule could not tell arithmetic noise from the value itself, so above
-  roughly 1e13 it silently returned a *different* number:
+- **Behaviour change.** A float is now stored as the shortest decimal that
+  reads back as the same double, instead of being rounded to 14 significant
+  digits. The old rule could not tell arithmetic noise from the value itself,
+  so above roughly 1e13 it silently returned a *different* number:
   `Number::of(123456789012345.0)` gave `123456789012340`, five short, even
   though the double held the value exactly. Such values are now kept.
 - The visible cost is that drift which happened before the call is no longer
