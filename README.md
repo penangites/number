@@ -113,11 +113,14 @@ $rate = Percentage::fromRatio('0.06');  // same thing (1 = 100%)
 
 $rate->toPercent(); // "6"
 $rate->toRatio();   // "0.06"
-(string) $rate;     // same
 $rate->toFloat();   // 0.06 — approximate; use toRatio() when exact
 $rate->toArray();   // ['ratio' => '0.06', 'percent' => '6']
 json_encode($rate); // '"0.06"' — reads back with fromRatio()
 ```
+
+A `Percentage` has no string cast: `"0.06"` and `"6"` are both plausible, so ask
+for `toPercent()`, `toRatio()` or `toArray()` by name rather than have the wrong
+one render silently.
 
 `Percentage` supports exact `add`, `subtract`, `negate`, comparisons and sign
 checks of its own:

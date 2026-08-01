@@ -36,10 +36,9 @@ it('serialises to array', function (): void {
     ]);
 });
 
-it('casts to string and serialises to JSON as the exact ratio', function (): void {
+it('serialises to JSON as the exact ratio', function (): void {
     $rate = Percentage::fromPercent('6');
 
-    expect((string) $rate)->toBe('0.06');
     expect(json_encode($rate))->toBe('"0.06"');
 
     // Every property is private, so without JsonSerializable a nested rate
@@ -50,7 +49,7 @@ it('casts to string and serialises to JSON as the exact ratio', function (): voi
     // The ratio is serialised, not the percent, because it is the one view a
     // single constructor reads back.
     //
-    expect(Percentage::fromRatio((string) $rate)->equals($rate))->toBeTrue();
+    expect(Percentage::fromRatio($rate->toRatio())->equals($rate))->toBeTrue();
 });
 
 it('adds and subtracts exactly with no float drift', function (): void {
